@@ -19,6 +19,6 @@ from optionsOIapi import views
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("getoi/<str:ticker>/<str:expiry>", views.getOptionOI),
+    path("getoi/<str:symbol>/<str:expiryDate>", views.getOptionOI),
     path("getexpirydate/", views.getExpiryDatesList),
 ]
