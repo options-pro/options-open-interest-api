@@ -71,3 +71,25 @@ def getOptionOI(request,symbol,expiryDate):
     dfCE = (json.loads(dfCE.to_json(orient='table')))["data"]
     
     return Response({"PE" : dfPE , "CE" : dfCE})
+
+@api_view(['GET'])
+def getFutureOI(request,symbol,expiryDate):
+
+    df = pd.DataFrame()
+    
+    currentYear = int(date.today().year)
+    currentMonth = int(date.today().month)
+    currentDate = int(date.today().day)
+    previous_close = round(get_history(symbol=symbol, start=date(currentYear,currentMonth,currentDate) + timedelta(days=-2), end=date(currentYear,currentMonth,currentDate))["Close"].iloc[0])
+    
+    
+    stock_opt = get_history(symbol=symbol,
+                        start=date(currentYear,currentMonth,currentDate) + timedelta(days=-60),
+                        end=date(currentYear,currentMonth,currentDate),
+                        futures = True,
+                        expiry_date=date(int(expiryDate[0:4]),int(expiryDate[5:7]),int(expiryDate[8:10])))
+    df = stock_opt.drop(['Expiry','Symbol','Open','High','Low','Close','Last','Settle Price','Number of Contracts','Turnover','Underlying'], axis=1)
+    df = (json.loads(df.to_json(orient='table')))["data"]
+
+    return Response({"Futures" : df})
+    
