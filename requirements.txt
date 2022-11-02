@@ -63,6 +63,7 @@ pure-eval==0.2.2
 pycparser==2.21
 Pygments==2.13.0
 pyparsing==3.0.9
+pypiwin32==223
 pyrsistent==0.18.1
 PySocks==1.7.1
 pytest==7.2.0
