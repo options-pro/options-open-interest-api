@@ -15,8 +15,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from optionsOIapi import views
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("getoi/<str:ticker>/<str:expiry>", views.tickeroi),
+    path("getoi/<str:ticker>/<str:expiry>", views.getOptionOI),
+    path("getexpirydate/", views.getExpiryDatesList),
 ]

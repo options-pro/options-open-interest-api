@@ -16,7 +16,7 @@ from nsepy import history
 import json
 
 @api_view(['GET'])
-def getExpiryDatesList():
+def getExpiryDatesList(request):
     
     expiryDates = []
     currentYear = todays_date = date.today().year
@@ -28,10 +28,10 @@ def getExpiryDatesList():
     expiryDates.sort()
     datejson = json.dumps(expiryDates, indent=4, sort_keys=True, default=str)
     
-    return (datejson)
+    return Response(datejson)
 
 @api_view(['GET'])
-def getOptionOI(symbol,expiryDate):
+def getOptionOI(request,symbol,expiryDate):
 
     dfPE = pd.DataFrame()    
     dfCE = pd.DataFrame()
@@ -67,4 +67,4 @@ def getOptionOI(symbol,expiryDate):
     dfCE = dfCE[dfCE['Open Interest'] > 0]
     dfCE = (json.loads(dfCE.to_json(orient='table')))["data"]
     
-    return {"PE" : dfPE , "CE" : dfCE}
+    return Response({"PE" : dfPE , "CE" : dfCE})
