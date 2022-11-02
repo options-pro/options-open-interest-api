@@ -26,7 +26,10 @@ def getExpiryDatesList(request):
         dates = list(expiry)
         expiryDates = expiryDates + dates
     expiryDates.sort()
-    datejson = json.dumps(expiryDates, indent=4, sort_keys=True, default=str)
+    datejson = [{
+    "date": str(expiryDates[i])
+    } for i in range(len(expiryDates) - 1)]
+    # datejson = json.dumps(expiryDates, indent=4, sort_keys=True, default=str)
     
     return Response(datejson)
 
