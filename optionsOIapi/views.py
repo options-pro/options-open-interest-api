@@ -42,7 +42,7 @@ def getOptionOI(request,symbol,expiryDate):
     currentYear = int(date.today().year)
     currentMonth = int(date.today().month)
     currentDate = int(date.today().day)
-    previous_close = round(get_history(symbol=symbol, start=date(currentYear,currentMonth,currentDate) + timedelta(days=-2), end=date(currentYear,currentMonth,currentDate))["Close"].iloc[0])
+    previous_close = round(get_history(symbol=symbol, start=date(currentYear,currentMonth,currentDate) + timedelta(days=-4), end=date(currentYear,currentMonth,currentDate))["Close"].iloc[0])
     
     for price in range(5*round(previous_close*.85/5),5*round(previous_close*1.15/5),5):
         stock_opt = get_history(symbol=symbol,
@@ -80,7 +80,7 @@ def getFutureOI(request,symbol,expiryDate):
     currentYear = int(date.today().year)
     currentMonth = int(date.today().month)
     currentDate = int(date.today().day)
-    previous_close = round(get_history(symbol=symbol, start=date(currentYear,currentMonth,currentDate) + timedelta(days=-2), end=date(currentYear,currentMonth,currentDate))["Close"].iloc[0])
+    previous_close = round(get_history(symbol=symbol, start=date(currentYear,currentMonth,currentDate) + timedelta(days=-4), end=date(currentYear,currentMonth,currentDate))["Close"].iloc[0])
     
     
     stock_opt = get_history(symbol=symbol,
