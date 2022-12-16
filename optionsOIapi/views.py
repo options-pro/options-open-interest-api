@@ -1,19 +1,13 @@
-from xmlrpc.client import ResponseError
-from django.http import JsonResponse
-from datetime import date
+from datetime import date, timedelta
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 import pandas as pd
-import csv ,operator ,json
-import os
-import glob
+import csv ,operator ,json, glob, warnings, os
 from nsepy.derivatives import get_expiry_date
-from datetime import timedelta
-from nsepy import get_index_pe_history
-from nsepy import get_history
-from nsepy import history
-import json
+from nsepy import get_index_pe_history, get_history, history
+
+warnings.simplefilter('ignore')
 
 @api_view(['GET'])
 def getExpiryDatesList(request):
@@ -53,7 +47,7 @@ def getOptionOI(request,symbol,expiryDate):
     dfPE = pd.DataFrame()    
     dfCE = pd.DataFrame()
     
-    # gives current date. month and year
+    # gives current date, month and year
     currentYear = int(date.today().year)
     currentMonth = int(date.today().month)
     currentDate = int(date.today().day)
@@ -63,12 +57,16 @@ def getOptionOI(request,symbol,expiryDate):
     
     # running the Strike price from 85% to 115% of current price of the ticker and rounded off to nearest 5
     for price in range(5*round(previous_close*.85/5),5*round(previous_close*1.15/5),5):
+
+        # retrieving historical OI data for each strike price in the above for loop
         stock_opt = get_history(symbol=symbol,
                             start=date(currentYear,currentMonth,currentDate) + timedelta(days=-60),
                             end=date(currentYear,currentMonth,currentDate),
                             option_type="PE",
                             strike_price=price,
                             expiry_date=date(int(expiryDate[0:4]),int(expiryDate[5:7]),int(expiryDate[8:10])))
+        
+        # we put dfPE = dfPE.append() again because append only returns new DataFrame, doesn't change the old one
         dfPE = dfPE.append(stock_opt)
     
     # dropping off non relevant columns from Put Option's DataFrame
@@ -85,12 +83,16 @@ def getOptionOI(request,symbol,expiryDate):
     
     # running the Strike price from 85% to 115% of current price of the ticker and rounded off to nearest 5
     for price in range(5*round(previous_close*.85/5),5*round(previous_close*1.15/5),5):
+
+        # retrieving historical OI data for each strike price in the above for loop
         stock_opt = get_history(symbol=symbol,
                             start=date(currentYear,currentMonth,currentDate) + timedelta(days=-60),
                             end=date(currentYear,currentMonth,currentDate),
                             option_type="CE",
                             strike_price=price,
                             expiry_date=date(int(expiryDate[0:4]),int(expiryDate[5:7]),int(expiryDate[8:10])))
+        
+        # we put dfPE = dfPE.append() again because append only returns new DataFrame, doesn't change the old one
         dfCE = dfCE.append(stock_opt)
 
     # dropping off non relevant columns from Call Option's DataFrame
